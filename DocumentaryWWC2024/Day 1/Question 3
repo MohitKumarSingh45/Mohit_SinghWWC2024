@@ -1,0 +1,26 @@
+//WAP on sum of natural numbers upto N.
+
+#include <iostream>
+using namespace std;
+
+int sumOfNaturalNumbers(int N) {
+    return (N * (N + 1)) / 2; 
+}
+
+int main() {
+    int N;
+
+
+    cout << "Enter a positive integer N: ";
+    cin >> N;
+
+    if (N <= 0) {
+        cout << "Please enter a positive integer greater than 0." << endl;
+    } else {
+      
+        int sum = sumOfNaturalNumbers(N);
+        cout << "The sum of natural numbers up to " << N << " is: " << sum << endl;
+    }
+
+    return 0;
+}
