@@ -1,0 +1,51 @@
+//Print your Whole Academic Bio data: Name, UID, Sector,AreaofInterest, Age, Last Year CGPA, Dob , HomeTown.
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    
+    string name, UID, sector, areaOfInterest, dob, hometown;
+    int age;
+    float lastYearCGPA;
+
+    cout << "Enter your name: ";
+    getline(cin, name);
+
+    cout << "Enter your UID: ";
+    cin >> UID;
+    cin.ignore(); 
+    cout << "Enter your sector (e.g., Computer Science): ";
+    getline(cin, sector);
+
+    cout << "Enter your area of interest: ";
+    getline(cin, areaOfInterest);
+
+    cout << "Enter your age: ";
+    cin >> age;
+
+    cout << "Enter your last year's CGPA: ";
+    cin >> lastYearCGPA;
+    cin.ignore(); 
+
+    cout << "Enter your date of birth (e.g., 15th August 2003): ";
+    getline(cin, dob);
+
+    cout << "Enter your hometown: ";
+    getline(cin, hometown);
+
+    // Display bio-data
+    cout << "\n------ Academic Bio-Data ------" << endl;
+    cout << "Name: " << name << endl;
+    cout << "UID: " << UID << endl;
+    cout << "Sector: " << sector << endl;
+    cout << "Area of Interest: " << areaOfInterest << endl;
+    cout << "Age: " << age << endl;
+    cout << "Last Year CGPA: " << lastYearCGPA << endl;
+    cout << "Date of Birth: " << dob << endl;
+    cout << "Hometown: " << hometown << endl;
+    cout << "-------------------------------" << endl;
+
+    return 0;
+}
