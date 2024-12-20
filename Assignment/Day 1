@@ -1,3 +1,29 @@
+//Requirement
+Requirements for Warehouse Inventory Management System
+Add Items
+
+Input: Item ID, Name, Category, Quantity, and Reorder Level.
+Functionality: Add an item to the inventory list.
+Update Stock
+
+Input: Item ID and new Quantity.
+Functionality: Update the stock quantity of an existing item. Alerts if the new quantity is below the reorder level.
+View Inventory
+
+Input: None.
+Functionality: Display all items in the inventory.
+Search Item
+
+Input: Name or Category.
+Functionality: Find and display items that match the search term.
+Export Inventory
+
+Input: None.
+Functionality: Save all inventory data to a text file (inventory.txt).
+Exit
+
+//CODE
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -157,3 +183,84 @@ int main() {
     system.menu();
     return 0;
 }
+
+//OUTPUT
+
+PS C:\Users\Mohit Kumar Singh> cd 'd:\output'
+PS D:\output> & .\'Assignment.exe'
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 1
+Enter Item ID: 101
+Enter Item Name: Screwdriver
+Enter Item Category: Tools
+Enter Quantity: 10
+Enter Reorder Level: 5
+
+Item added successfully!
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 2
+Enter Item ID to update stock: 101
+Enter new quantity: 15    
+
+Stock updated successfully!
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 3
+
+--- Inventory List ---
+ID: 101, Name: Screwdriver, Category: Tools, Quantity: 15, Reorder Level: 5
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 4
+Enter name or category to search: Tools
+
+--- Search Results ---
+ID: 101, Name: Screwdriver, Category: Tools, Quantity: 15, Reorder Level: 5
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 5
+
+Inventory data exported successfully to 'inventory_report.txt'!
+
+--- Warehouse Inventory Management System ---
+1. Add New Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 6
+
+Exiting the program. Goodbye!
