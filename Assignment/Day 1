@@ -1,0 +1,159 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+using namespace std;
+
+class Item {
+public:
+    int itemID;
+    string name;
+    string category;
+    int quantity;
+    int reorderLevel;
+
+    Item(int id, string n, string c, int q, int r)
+        : itemID(id), name(n), category(c), quantity(q), reorderLevel(r) {}
+};
+
+class InventoryManagement {
+private:
+    vector<Item> inventory;
+
+    void alertLowStock(const Item& item) {
+        if (item.quantity < item.reorderLevel) {
+            cout << "\n[Alert] Item '" << item.name << "' is below the reorder level!\n";
+        }
+    }
+
+public:
+    void addItem() {
+        int id, quantity, reorderLevel;
+        string name, category;
+
+        cout << "Enter Item ID: ";
+        cin >> id;
+        cout << "Enter Item Name: ";
+        cin.ignore();
+        getline(cin, name);
+        cout << "Enter Item Category: ";
+        getline(cin, category);
+        cout << "Enter Quantity: ";
+        cin >> quantity;
+        cout << "Enter Reorder Level: ";
+        cin >> reorderLevel;
+
+        inventory.push_back(Item(id, name, category, quantity, reorderLevel));
+        cout << "\nItem added successfully!\n";
+    }
+
+    void updateStock() {
+        int id, newQuantity;
+        cout << "Enter Item ID to update stock: ";
+        cin >> id;
+
+        for (auto& item : inventory) {
+            if (item.itemID == id) {
+                cout << "Enter new quantity: ";
+                cin >> newQuantity;
+                item.quantity = newQuantity;
+                cout << "\nStock updated successfully!\n";
+                alertLowStock(item);
+                return;
+            }
+        }
+        cout << "\nItem not found!\n";
+    }
+
+    void viewInventory() {
+        cout << "\n--- Inventory List ---\n";
+        for (const auto& item : inventory) {
+            cout << "ID: " << item.itemID
+                 << ", Name: " << item.name
+                 << ", Category: " << item.category
+                 << ", Quantity: " << item.quantity
+                 << ", Reorder Level: " << item.reorderLevel << endl;
+        }
+    }
+
+    void searchItem() {
+        string keyword;
+        cout << "Enter name or category to search: ";
+        cin.ignore();
+        getline(cin, keyword);
+
+        cout << "\n--- Search Results ---\n";
+        for (const auto& item : inventory) {
+            if (item.name.find(keyword) != string::npos || item.category.find(keyword) != string::npos) {
+                cout << "ID: " << item.itemID
+                     << ", Name: " << item.name
+                     << ", Category: " << item.category
+                     << ", Quantity: " << item.quantity
+                     << ", Reorder Level: " << item.reorderLevel << endl;
+            }
+        }
+    }
+
+    void exportInventory() {
+        ofstream file("inventory_report.txt");
+        if (!file) {
+            cout << "\nError opening file for writing!\n";
+            return;
+        }
+
+        file << "--- Inventory Report ---\n";
+        for (const auto& item : inventory) {
+            file << "ID: " << item.itemID
+                 << ", Name: " << item.name
+                 << ", Category: " << item.category
+                 << ", Quantity: " << item.quantity
+                 << ", Reorder Level: " << item.reorderLevel << endl;
+        }
+        file.close();
+        cout << "\nInventory data exported successfully to 'inventory_report.txt'!\n";
+    }
+
+    void menu() {
+        int choice;
+        do {
+            cout << "\n--- Warehouse Inventory Management System ---\n";
+            cout << "1. Add New Item\n";
+            cout << "2. Update Stock\n";
+            cout << "3. View Inventory\n";
+            cout << "4. Search Item\n";
+            cout << "5. Export Inventory\n";
+            cout << "6. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    addItem();
+                    break;
+                case 2:
+                    updateStock();
+                    break;
+                case 3:
+                    viewInventory();
+                    break;
+                case 4:
+                    searchItem();
+                    break;
+                case 5:
+                    exportInventory();
+                    break;
+                case 6:
+                    cout << "\nExiting the program. Goodbye!\n";
+                    break;
+                default:
+                    cout << "\nInvalid choice! Please try again.\n";
+            }
+        } while (choice != 6);
+    }
+};
+
+int main() {
+    InventoryManagement system;
+    system.menu();
+    return 0;
+}
