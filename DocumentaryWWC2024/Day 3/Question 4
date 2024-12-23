@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+
+int findWinner(int n, int k) {
+    int winner = 0; // The position of the winner in 0-based index
+    for (int i = 1; i <= n; ++i) {
+        winner = (winner + k) % i; // Update the winner's position
+    }
+    return winner + 1; // Convert to 1-based index
+}
+
+int main() {
+    int n, k;
+    std::cout << "Enter the number of friends (n): ";
+    std::cin >> n;
+    std::cout << "Enter the counting number (k): ";
+    std::cin >> k;
+
+    int winner = findWinner(n, k);
+    std::cout << "The winner is friend number: " << winner << std::endl;
+
+    return 0;
+}
+
