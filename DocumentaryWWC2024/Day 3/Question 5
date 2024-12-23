@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+const int MOD = 1e9 + 7;
+
+// Function to calculate factorial modulo MOD
+long long factorial(int n) {
+    long long result = 1;
+    for (int i = 1; i <= n; ++i) {
+        result = (result * i) % MOD;
+    }
+    return result;
+}
+
+// Function to find the minimum non-zero product
+long long minNonZeroProduct(int p) {
+    // The maximum number in the range [1, 2^p - 1]
+    int maxNum = (1 << p) - 1; // This is 2^p - 1
+    // The product of all numbers from 1 to maxNum
+    long long product = factorial(maxNum);
+    return product;
+}
+
+int main() {
+    int p;
+    std::cout << "Enter the value of p: ";
+    std::cin >> p;
+
+    long long result = minNonZeroProduct(p);
+    std::cout << "The minimum non-zero product is: " << result << std::endl;
+
+    return 0;
+}
