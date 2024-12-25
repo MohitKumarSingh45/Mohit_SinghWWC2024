@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <chrono>
+
+enum Severity {
+    LOW,
+    MEDIUM,
+    HIGH,
+    CRITICAL
+};
+
+struct Patient {
+    std::string name;
+    Severity severity;
+    std::chrono::time_point<std::chrono::system_clock> arrivalTime;
+
+    // Constructor
+    Patient(std::string n, Severity s)
+        : name(n), severity(s), arrivalTime(std::chrono::system_clock::now()) {}
+
+    // For priority queue, we need to define the comparison operator
+    bool operator<(const Patient& other) const {
+        // Higher severity has higher priority (CRITICAL > HIGH > MEDIUM > LOW)
+        if (severity != other.severity) {
+            return severity < other.severity; // Lower severity value means lower priority
+        }
+        // If severity is the same, prioritize by arrival time (earlier arrival gets higher priority)
+        return arrivalTime > other.arrivalTime; // Earlier arrival has higher priority
+    }
+};
+
+class EmergencyDepartment {
+private:
+    std::priority_queue<Patient> patientQueue;
+
+public:
+    // Function to add a new patient
+    void addPatient(const std::string& name, Severity severity) {
+        Patient newPatient(name, severity);
+        patientQueue.push(newPatient);
+    }
+
+    // Function to see the next patient
+    void seeNextPatient() {
+        if (patientQueue.empty()) {
+            std::cout << "No patients in the queue.\n";
+            return;
+        }
+        Patient nextPatient = patientQueue.top();
+        patientQueue.pop();
+        std::cout << "Seeing patient: " << nextPatient.name 
+                  << " with severity: " << nextPatient.severity << "\n";
+    }
+
+    // Function to display all patients in the queue
+    void displayQueue() {
+        std::priority_queue<Patient> tempQueue = patientQueue; // Copy to preserve original queue
+        std::cout << "Current patient queue:\n";
+        while (!tempQueue.empty()) {
+            Patient p = tempQueue.top();
+            tempQueue.pop();
+            std::cout << "Patient: " << p.name 
+                      << ", Severity: " << p.severity << "\n";
+        }
+    }
+};
+
+int main() {
+    EmergencyDepartment ed;
+
+    // Adding patients to the emergency department
+    ed.addPatient("Alice", CRITICAL);
+    ed.addPatient("Bob", HIGH);
+    ed.addPatient("Charlie", MEDIUM);
+    ed.addPatient("David", LOW);
+    ed.addPatient("Eve", CRITICAL);
+
+    // Display current queue
+    ed.displayQueue();
+
+    // See the next patient
+    ed.seeNextPatient();
+    ed.seeNextPatient();
+
+    // Display current queue after seeing some patients
+    ed.displayQueue();
+
+    return 0;
+}
