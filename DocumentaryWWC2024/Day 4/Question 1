@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+struct Transaction {
+    std::string transactionId;
+    double amount;
+    int frequency; // Number of transactions in a given time frame
+    double geographicalAnomaly; // Distance from usual location
+    double timeAnomaly; // Time of day deviation
+    double suspiciousnessScore;
+
+    // Constructor
+    Transaction(std::string id, double amt, int freq, double geoAnomaly, double timeAnomaly)
+        : transactionId(id), amount(amt), frequency(freq), geographicalAnomaly(geoAnomaly), timeAnomaly(timeAnomaly), suspiciousnessScore(0) {}
+};
+
+// Function to calculate the suspiciousness score
+double calculateSuspiciousnessScore(const Transaction& transaction) {
+    // Weights for each factor (these can be adjusted based on historical data)
+    const double w1 = 0.5; // Weight for transaction amount
+    const double w2 = 0.3; // Weight for frequency deviation
+    const double w3 = 0.1; // Weight for geographical anomaly
+    const double w4 = 0.1; // Weight for time anomaly
+
+    // Calculate the score
+    return (w1 * transaction.amount) + 
+           (w2 * transaction.frequency) + 
+           (w3 * transaction.geographicalAnomaly) + 
+           (w4 * transaction.timeAnomaly);
+}
+
+// Comparator function for sorting transactions by suspiciousness score
+bool compareBySuspiciousness(const Transaction& a, const Transaction& b) {
+    return a.suspiciousnessScore > b.suspiciousnessScore; // Sort in descending order
+}
+
+int main() {
+    // Sample transactions
+    std::vector<Transaction> transactions = {
+        Transaction("TXN001", 500.0, 5, 2.0, 1.0),
+        Transaction("TXN002", 1500.0, 10, 5.0, 3.0),
+        Transaction("TXN003", 200.0, 1, 0.5, 0.2),
+        Transaction("TXN004", 3000.0, 2, 10.0, 4.0),
+        Transaction("TXN005", 100.0, 20, 1.0, 0.5)
+    };
+
+    // Calculate suspiciousness scores for each transaction
+    for (auto& txn : transactions) {
+        txn.suspiciousnessScore = calculateSuspiciousnessScore(txn);
+    }
+
+    // Sort transactions by suspiciousness score
+    std::sort(transactions.begin(), transactions.end(), compareBySuspiciousness);
+
+    // Display flagged transactions
+    std::cout << "Flagged Transactions (sorted by suspiciousness score):\n";
+    for (const auto& txn : transactions) {
+        std::cout << "Transaction ID: " << txn.transactionId 
+                  << ", Amount: " << txn.amount 
+                  << ", Suspiciousness Score: " << txn.suspiciousnessScore << "\n";
+    }
+
+    return 0;
+}
