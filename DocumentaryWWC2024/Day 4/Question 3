@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <unordered_map>
+
+struct Video {
+    std::string title;
+    int totalViews; // Total views of the video
+    double userRating; // Average user rating
+    int releaseYear; // Year of release
+    double score; // Score for sorting
+
+    // Constructor
+    Video(std::string t, int views, double rating, int year)
+        : title(t), totalViews(views), userRating(rating), releaseYear(year), score(0) {}
+};
+
+// Function to calculate the score based on popularity and recency
+double calculateScore(const Video& video) {
+    const double popularityWeight = 0.7; // Weight for total views
+    const double recencyWeight = 0.3; // Weight for recency (newer videos are better)
+
+    // Calculate recency as a value between 0 and 1 (1 being the most recent)
+    int currentYear = 2023; // Assume current year is 2023
+    double recencyScore = static_cast<double>(currentYear - video.releaseYear) / currentYear;
+
+    // Calculate the score
+    return (popularityWeight * video.totalViews) + (recencyWeight * (1 - recencyScore));
+}
+
+// Comparator function for sorting videos by score
+bool compareByScore(const Video& a, const Video& b) {
+    return a.score > b.score; // Sort in descending order
+}
+
+// Function to generate personalized recommendations based on user history
+std::vector<Video> generateRecommendations(const std::vector<Video>& catalog, const std::vector<std::string>& userHistory) {
+    std::unordered_map<std::string, int> userViewCount;
+
+    // Count views of videos in user history
+    for (const auto& title : userHistory) {
+        userViewCount[title]++;
+    }
+
+    std::vector<Video> recommendations = catalog;
+
+    // Adjust scores based on user history
+    for (auto& video : recommendations) {
+        if (userViewCount.find(video.title) != userViewCount.end()) {
+            video.score += 10; // Boost score for videos the user has watched
+        }
+    }
+
+    // Calculate scores for all videos
+    for (auto& video : recommendations) {
+        video.score += calculateScore(video);
+    }
+
+    // Sort recommendations by score
+    std::sort(recommendations.begin(), recommendations.end(), compareByScore);
+
+    return recommendations;
+}
+
+int main() {
+    // Sample video catalog
+    std::vector<Video> catalog = {
+        Video("Movie A", 1000, 4.5, 2021),
+        Video("Movie B", 5000, 4.0, 2020),
+        Video("Movie C", 2000, 4.8, 2022),
+        Video("Movie D", 3000, 3.5, 2023),
+        Video("Movie E", 1500, 4.2, 2019)
+    };
+
+    // Sample user viewing history
+    std::vector<std::string> userHistory = {"Movie A", "Movie C", "Movie E"};
+
+    // Generate recommendations
+    std::vector<Video> recommendations = generateRecommendations(catalog, userHistory);
+
+    // Display recommendations
+    std::cout << "Recommended Videos:\n";
+    for (const auto& video : recommendations) {
+        std::cout << "Title: " << video.title 
+                  << ", Total Views: " << video.totalViews 
+                  << ", User Rating: " << video.userRating 
+                  << ", Release Year: " << video.releaseYear 
+                  << ", Score: " << video.score << "\n";
+    }
+
+    return 0;
+}
