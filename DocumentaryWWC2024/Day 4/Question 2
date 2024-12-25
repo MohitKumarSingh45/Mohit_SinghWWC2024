@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <string>
+
+// Define a structure to represent a trade record
+struct Trade {
+    std::string timestamp;
+    std::string stock_symbol;
+    double trade_price;
+    int trade_volume;
+};
+
+// Function to display trade records
+void displayTrades(const std::vector<Trade>& trades) {
+    for (const auto& trade : trades) {
+        std::cout << "Timestamp: " << trade.timestamp
+                  << ", Stock: " << trade.stock_symbol
+                  << ", Price: " << trade.trade_price
+                  << ", Volume: " << trade.trade_volume << std::endl;
+    }
+}
+
+int main() {
+    // Sample data for demonstration
+    std::vector<Trade> trades = {
+        {"2024-12-24T10:00:00", "AAPL", 175.5, 100},
+        {"2024-12-24T10:01:00", "GOOGL", 2895.2, 200},
+        {"2024-12-24T10:00:30", "AAPL", 175.7, 150},
+        {"2024-12-24T10:02:00", "MSFT", 315.8, 100},
+        {"2024-12-24T10:01:30", "GOOGL", 2894.8, 300},
+        {"2024-12-24T10:00:45", "AAPL", 175.6, 50}
+    };
+
+    // Sort by timestamp
+    std::sort(trades.begin(), trades.end(), [](const Trade& a, const Trade& b) {
+        return a.timestamp < b.timestamp;
+    });
+
+    std::cout << "\nTrades sorted by timestamp:" << std::endl;
+    displayTrades(trades);
+
+    // Sort by stock symbol
+    std::sort(trades.begin(), trades.end(), [](const Trade& a, const Trade& b) {
+        return a.stock_symbol < b.stock_symbol;
+    });
+
+    std::cout << "\nTrades sorted by stock symbol:" << std::endl;
+    displayTrades(trades);
+
+    // Group by trading volume trends
+    std::map<int, std::vector<Trade>> volumeGroups;
+    for (const auto& trade : trades) {
+        volumeGroups[trade.trade_volume].push_back(trade);
+    }
+
+    std::cout << "\nTrades grouped by trading volume:" << std::endl;
+    for (const auto& group : volumeGroups) {
+        std::cout << "Volume: " << group.first << std::endl;
+        displayTrades(group.second);
+    }
+
+    return 0;
+}
