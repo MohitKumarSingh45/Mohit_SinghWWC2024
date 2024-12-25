@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <chrono>
+
+struct Ad {
+    std::string advertiserName;
+    double bidAmount; // Amount the advertiser is willing to pay
+    double engagementRate; // Engagement rate of the ad
+    double remainingBudget; // Remaining budget for the ad campaign
+    std::chrono::time_point<std::chrono::system_clock> arrivalTime; // Time when the ad was added
+
+    // Constructor
+    Ad(std::string name, double bid, double engagement, double budget)
+        : advertiserName(name), bidAmount(bid), engagementRate(engagement), remainingBudget(budget), arrivalTime(std::chrono::system_clock::now()) {}
+
+    // For priority queue, we need to define the comparison operator
+    bool operator<(const Ad& other) const {
+        // Prioritize by bid amount, then engagement rate, then remaining budget
+        if (bidAmount != other.bidAmount) {
+            return bidAmount < other.bidAmount; // Higher bid amount has higher priority
+        }
+        if (engagementRate != other.engagementRate) {
+            return engagementRate < other.engagementRate; // Higher engagement rate has higher priority
+        }
+        return remainingBudget < other.remainingBudget; // Higher remaining budget has higher priority
+    }
+};
+
+class AdScheduler {
+private:
+    std::priority_queue<Ad> adQueue;
+
+public:
+    // Function to add a new ad
+    void addAd(const std::string& name, double bid, double engagement, double budget) {
+        Ad newAd(name, bid, engagement, budget);
+        adQueue.push(newAd);
+    }
+
+    // Function to schedule the next ad
+    void scheduleNextAd() {
+        if (adQueue.empty()) {
+            std::cout << "No ads to schedule.\n";
+            return;
+        }
+        Ad nextAd = adQueue.top();
+        adQueue.pop();
+        std::cout << "Scheduling ad for: " << nextAd.advertiserName 
+                  << " with Bid: " << nextAd.bidAmount 
+                  << ", Engagement Rate: " << nextAd.engagementRate 
+                  << ", Remaining Budget: " << nextAd.remainingBudget << "\n";
+    }
+
+    // Function to display all ads in the queue
+    void displayQueue() {
+        std::priority_queue<Ad> tempQueue = adQueue; // Copy to preserve original queue
+        std::cout << "Current ad queue:\n";
+        while (!tempQueue.empty()) {
+            Ad ad = tempQueue.top();
+            tempQueue.pop();
+            std::cout << "Ad for: " << ad.advertiserName 
+                      << ", Bid: " << ad.bidAmount 
+                      << ", Engagement Rate: " << ad.engagementRate 
+                      << ", Remaining Budget: " << ad.remainingBudget << "\n";
+        }
+    }
+};
+
+int main() {
+    AdScheduler scheduler;
+
+    // Adding ads to the scheduler
+    scheduler.addAd("Advertiser A", 100.0, 0.75, 5000.0);
+    scheduler.addAd("Advertiser B", 150.0, 0.85, 3000.0);
+    scheduler.addAd("Advertiser C", 120.0, 0.90, 4000.0);
+    scheduler.addAd("Advertiser D", 200.0, 0.60, 6000.0);
+    scheduler.addAd("Advertiser E", 150.0, 0.95, 2000.0);
+
+    // Display current queue
+    scheduler.displayQueue();
+
+    // Schedule the next ad
+    scheduler.scheduleNextAd();
+    scheduler.scheduleNextAd();
+
+    // Display current queue after scheduling some ads
+    scheduler.displayQueue();
+
+    return 0;
+}
